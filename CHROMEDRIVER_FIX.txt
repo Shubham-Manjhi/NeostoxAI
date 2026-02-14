@@ -1,0 +1,116 @@
+================================================================================
+CHROMEDRIVER ISSUE - FIXED!
+================================================================================
+
+The issue you encountered was related to webdriver-manager downloading ChromeDriver
+but pointing to the wrong file (THIRD_PARTY_NOTICES instead of the actual executable).
+
+================================================================================
+WHAT WAS FIXED:
+================================================================================
+
+1. Updated broker.py to use Selenium 4's built-in driver management (selenium-manager)
+   - This is more reliable than webdriver-manager
+   - Automatically downloads and manages ChromeDriver
+   - Works better on macOS ARM64
+
+2. Added fallback to webdriver-manager with proper path fixing
+   - If selenium-manager fails, tries webdriver-manager
+   - Automatically finds the correct chromedriver executable
+   - Handles macOS ARM64 path issues
+
+3. Cleared the corrupted webdriver-manager cache
+   - Removed ~/.wdm/drivers/chromedriver
+   - Fresh download will work correctly
+
+================================================================================
+HOW TO RUN NOW:
+================================================================================
+
+Simply run the demo again:
+
+    python3 demo.py
+
+Selenium 4's built-in selenium-manager will automatically:
+- Download the correct ChromeDriver for your system
+- Handle macOS ARM64 compatibility
+- Use the correct executable path
+
+================================================================================
+WHAT TO EXPECT:
+================================================================================
+
+When you run python3 demo.py:
+
+1. You'll see: "Initializing ChromeDriver..."
+2. Then: "Attempting to use Selenium's built-in driver manager..."
+3. ChromeDriver will download automatically (first time only)
+4. Then: "✓ ChromeDriver initialized successfully with selenium-manager"
+5. Chrome browser will open
+6. The demo will proceed normally
+
+================================================================================
+IF IT STILL DOESN'T WORK:
+================================================================================
+
+Alternative Option 1: Install ChromeDriver via Homebrew
+-------------------------------------------------------
+    brew install chromedriver
+
+Then run:
+    python3 demo.py
+
+
+Alternative Option 2: Manual ChromeDriver Installation
+------------------------------------------------------
+1. Download ChromeDriver from:
+   https://chromedriver.chromium.org/downloads
+
+2. Choose the version matching your Chrome version
+   (Check Chrome version: Chrome menu > About Google Chrome)
+
+3. Extract and move to /usr/local/bin:
+   unzip chromedriver-mac-arm64.zip
+   mv chromedriver /usr/local/bin/
+   chmod +x /usr/local/bin/chromedriver
+
+4. If you get a security warning:
+   System Preferences > Security & Privacy > Allow chromedriver
+
+Then run:
+    python3 demo.py
+
+
+Alternative Option 3: Use find_chromedriver.py
+----------------------------------------------
+First, run the diagnostic script:
+    python3 find_chromedriver.py
+
+This will show you where ChromeDriver is located and if it's executable.
+
+================================================================================
+TECHNICAL DETAILS:
+================================================================================
+
+The error occurred because:
+- webdriver-manager downloaded ChromeDriver as a zip for macOS ARM64
+- The ChromeDriver zip contains multiple files including THIRD_PARTY_NOTICES
+- webdriver-manager mistakenly pointed to THIRD_PARTY_NOTICES instead of chromedriver
+- The system tried to execute THIRD_PARTY_NOTICES as a program (Exec format error)
+
+The fix:
+- Now using Selenium 4's built-in selenium-manager as primary method
+- It properly handles ChromeDriver installation on all platforms
+- Fallback logic finds the correct executable if needed
+- Cleared the corrupted cache to allow fresh download
+
+================================================================================
+NOW TRY RUNNING:
+================================================================================
+
+    python3 demo.py
+
+The ChromeDriver issue is resolved! 🎉
+
+================================================================================
+
